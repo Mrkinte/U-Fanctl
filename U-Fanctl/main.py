@@ -21,7 +21,7 @@ if __name__ == "__main__":
     res = init_fan_control()
     if res:
         # 启动软件时满速启动风扇一次，避免堵转。
-        set_speed(1000)
+        set_speed(100)
         if config.get("control.manual"):
             time.sleep(1)
             set_speed(config.get("control.manual_speed"))

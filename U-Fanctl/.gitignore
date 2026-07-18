@@ -3,6 +3,10 @@
 
 # Logs
 *.log
+log.txt
+
+# Config
+config.toml
 
 # Virtualenv
 venv/

@@ -143,6 +143,7 @@ const handleApply = async () => {
 
 const handleRestoreDefaultCurve = async () => {
   await handleGetCurveConfig(true);
+  updateGraphic();
   await handleApply();
 };
 

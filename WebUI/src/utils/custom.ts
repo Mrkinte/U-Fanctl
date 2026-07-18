@@ -7,3 +7,10 @@ export const getApiBaseUrl = () => {
   }
   return window.location.host;
 };
+
+
+export const getWebSocketBaseUrl = () => {
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = getApiBaseUrl();
+  return `${protocol}//${host}`;
+};

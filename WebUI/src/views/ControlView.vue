@@ -4,7 +4,7 @@ import ControlCurve from "../components/ControlCurve.vue";
 import SettingsCard from "../components/SettingsCard.vue";
 import { onMounted, ref } from "vue";
 import { deviceStatus, ws } from "../models/global.ts";
-import { getApiBaseUrl } from "../utils/custom.ts";
+import { getWebSocketBaseUrl } from "../utils/custom.ts";
 import type { DeviceStatus } from "../models/config-model.ts";
 import type TemperatureChart from "../components/TemperatureChart.vue";
 
@@ -18,7 +18,7 @@ const handlePushTemperature = (temp: number) => {
 onMounted(() => {
   if (ws.value !== undefined) return;
 
-  ws.value = new WebSocket(`ws://${getApiBaseUrl()}/api/v1/ws/info`);
+  ws.value = new WebSocket(`${getWebSocketBaseUrl()}/api/v1/ws/info`);
 
   ws.value.onclose = () => {
     clearInterval(heartbeatTimer.value);

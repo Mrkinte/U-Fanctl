@@ -68,6 +68,6 @@ async def logout(_=Depends(session_expired)):
     return CustomResponse(result=Result.SUCCESS, detail="退出登录")
 
 
-@router.get("/heartbeat")
-async def heartbeat(_=Depends(session_expired)):
+@router.get("/login-detection")
+async def LoginDetection(_=Depends(session_expired)):
     return CustomResponse(result=Result.SUCCESS)

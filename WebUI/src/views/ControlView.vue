@@ -2,11 +2,16 @@
 import ControlMode from "../components/ControlMode.vue";
 import ControlCurve from "../components/ControlCurve.vue";
 import SettingsCard from "../components/SettingsCard.vue";
-import { onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { deviceStatus, ws } from "../models/global.ts";
 import { getWebSocketBaseUrl } from "../utils/custom.ts";
 import type { DeviceStatus } from "../models/config-model.ts";
 import type TemperatureChart from "../components/TemperatureChart.vue";
+import { LoginDetection, logout } from "../apis/auth.ts";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const isLoggedIn = ref(false);
 
 const heartbeatTimer = ref(0);
 const chartRef = ref<InstanceType<typeof TemperatureChart> | null>(null);
@@ -15,8 +20,16 @@ const handlePushTemperature = (temp: number) => {
   chartRef.value?.pushTemperature(temp);
 };
 
-onMounted(() => {
+onMounted(async () => {
   if (ws.value !== undefined) return;
+
+  try {
+    await LoginDetection();
+  } catch {
+    router.push("/");
+    return;
+  }
+  isLoggedIn.value = true;
 
   ws.value = new WebSocket(`${getWebSocketBaseUrl()}/api/v1/ws/info`);
 
@@ -36,6 +49,12 @@ onMounted(() => {
     if (ws.value === undefined) return;
     ws.value.send("heartbeat");
   }, 5000);
+});
+
+onBeforeUnmount(() => {
+  if (isLoggedIn.value) {
+    logout();
+  }
 });
 </script>
 

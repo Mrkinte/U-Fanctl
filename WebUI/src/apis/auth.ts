@@ -9,6 +9,6 @@ export async function logout() {
   await request.get("/auth/logout");
 }
 
-export async function heartbeat() {
-  await request.get("/auth/heartbeat");
+export async function LoginDetection() {
+  return (await request.get("/auth/login-detection")) as CustomResponse;
 }

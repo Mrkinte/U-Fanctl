@@ -98,7 +98,7 @@ const handleResetPassword = async () => {
 }
 
 .settings-card {
-  width: 400px;
+  min-width: 640px;
   display: flex;
 }
 </style>

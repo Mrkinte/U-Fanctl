@@ -174,7 +174,7 @@ onMounted(async () => {
 
 <style scoped>
 .control-mode {
-  width: 400px;
+  min-width: 640px;
   display: flex;
 }
 

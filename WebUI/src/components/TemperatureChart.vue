@@ -115,7 +115,7 @@ defineExpose({ pushTemperature });
 
 <style scoped>
 .temperature-chart {
-  width: 800px;
+  min-width: 640px;
   display: flex;
 }
 

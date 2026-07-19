@@ -8,9 +8,9 @@ import { getWebSocketBaseUrl } from "../utils/custom.ts";
 import type { DeviceStatus } from "../models/config-model.ts";
 import type TemperatureChart from "../components/TemperatureChart.vue";
 import { LoginDetection, logout } from "../apis/auth.ts";
-import { useRouter } from "vue-router";
+import { useDialog } from "naive-ui";
 
-const router = useRouter();
+const dialog = useDialog();
 const isLoggedIn = ref(false);
 
 const heartbeatTimer = ref(0);
@@ -26,7 +26,11 @@ onMounted(async () => {
   try {
     await LoginDetection();
   } catch {
-    router.push("/");
+    dialog.warning({
+      title: "登录超时",
+      content: "当前会话已失效，请重新登录。",
+      positiveText: "确定",
+    });
     return;
   }
   isLoggedIn.value = true;
@@ -69,11 +73,10 @@ onBeforeUnmount(() => {
 
 <style scoped>
 #control-view {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(640px, 1fr));
   gap: 24px;
   padding: 24px;
-  align-items: stretch;
 }
 
 @media (max-width: 540px) {

@@ -201,7 +201,7 @@ onUnmounted(() => {
 
 <style scoped>
 .control-curve {
-  width: 800px;
+  min-width: 640px;
   display: flex;
 }
 

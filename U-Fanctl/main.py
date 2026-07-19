@@ -36,7 +36,7 @@ if __name__ == "__main__":
         # 启动软件时满速启动风扇一次，避免堵转。
         set_speed(100)
         if config.get("control.manual"):
-            time.sleep(1)
+            time.sleep(2)
             set_speed(config.get("control.manual_speed"))
         scheduler.add_job(regulate_fan_speed, "interval", seconds=1)
 

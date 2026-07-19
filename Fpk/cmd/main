@@ -7,7 +7,7 @@ PID_FILE="${TRIM_PKGVAR}/app.pid"
 CMD="
 cd "$TRIM_APPDEST"
 cd ./server
-./u-fanctl
+./u-fanctl -p $wizard_port
 "
 
 log_msg() {

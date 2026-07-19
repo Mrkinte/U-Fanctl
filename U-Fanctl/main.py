@@ -1,4 +1,5 @@
 import time
+import argparse
 
 import uvicorn
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -9,7 +10,19 @@ from services.web_service import web
 from utils.config_manager import init_config, get_config
 from utils.project import print_welcome
 
+WEB_DEFAULT_PORT = 3233
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-p",
+        "--port",
+        type=int,
+        default=WEB_DEFAULT_PORT,
+        help="指定访问端口 (默认: 3233)",
+    )
+    args = parser.parse_args()
+
     print_welcome()
     logger.add("log.txt", rotation="1 MB")
 
@@ -29,6 +42,10 @@ if __name__ == "__main__":
 
     scheduler.start()
 
-    web_port = config.get("system.web_port")
-    if web_port is not None:
-        uvicorn.run(web, host="0.0.0.0", port=web_port)
+    web_port = args.port
+    if web_port == WEB_DEFAULT_PORT:
+        # 如果命令行未使用-p指定端口，则使用配置文件中配置的端口。
+        web_port = config.get("system.web_port")
+        if web_port is None:
+            web_port = WEB_DEFAULT_PORT
+    uvicorn.run(web, host="0.0.0.0", port=web_port)

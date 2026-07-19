@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { darkTheme, type GlobalThemeOverrides } from "naive-ui";
-import { computed, onMounted } from "vue";
+import { darkTheme, lightTheme, type GlobalThemeOverrides } from "naive-ui";
+import { computed, onMounted, ref } from "vue";
 import { getSystemConfig } from "./apis/config.ts";
 import MessageBridge from "./views/MessageBridge.vue";
 import type { SystemConfig } from "./models/config-model.ts";
 import { title, version } from "./models/global.ts";
+import { WeatherMoon24Filled, WeatherSunny24Regular } from "@vicons/fluent";
+import type { BuiltInGlobalTheme } from "naive-ui/es/themes/interface";
+
+const currentTheme = ref<BuiltInGlobalTheme>(darkTheme);
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {
@@ -20,11 +24,25 @@ const badgeUrl = computed(
     `https://img.shields.io/badge/Version-${version.value}-brightgreen?style=flat-square`,
 );
 
+const handleThemeButton = () => {
+  if (currentTheme.value.name === "light") {
+    currentTheme.value = darkTheme;
+  } else {
+    currentTheme.value = lightTheme;
+  }
+  localStorage.setItem("theme", currentTheme.value.name);
+};
+
 const handleGithub = () => {
   window.open("https://github.com/mrkinte/U-Fanctl", "_blank");
 };
 
 onMounted(async () => {
+  const theme = localStorage.getItem("theme");
+  if (theme === "light") {
+    currentTheme.value = lightTheme;
+  }
+
   const res = await getSystemConfig();
   if (res.result === "success") {
     const conf = res.data as SystemConfig;
@@ -35,7 +53,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <n-config-provider :theme="darkTheme" :theme-overrides="themeOverrides">
+  <n-config-provider :theme="currentTheme" :theme-overrides="themeOverrides">
     <n-dialog-provider>
       <n-message-provider>
         <MessageBridge />
@@ -43,7 +61,19 @@ onMounted(async () => {
           <n-layout>
             <n-layout-header class="header">
               <span class="title-span">{{ title }}</span>
-              <img :src="badgeUrl" alt="version" />
+              <n-flex align="center" size="large">
+                <n-button
+                  text
+                  style="font-size: 24px"
+                  @click="handleThemeButton"
+                >
+                  <n-icon>
+                    <WeatherMoon24Filled v-if="currentTheme.name === 'light'" />
+                    <WeatherSunny24Regular v-else />
+                  </n-icon>
+                </n-button>
+                <img :src="badgeUrl" alt="version" />
+              </n-flex>
             </n-layout-header>
             <n-layout-content class="content">
               <router-view />

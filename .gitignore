@@ -1,0 +1,6 @@
+# Build
+/Fpk/app/server
+*.fpk
+
+# Database
+*.db

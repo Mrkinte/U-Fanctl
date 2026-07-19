@@ -1,0 +1,28 @@
+{
+    "data-share":
+    {
+        "shares":
+        [
+            {
+                "name": "u-fanctl",
+                "permission":
+                {
+                    "rw":
+                    [
+                        "u-fanctl"
+                    ]
+                }
+            },
+            {
+                "name": "u-fanctl/data",
+                "permission":
+                {
+                    "rw":
+                    [
+                        "u-fanctl"
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+appname               = u-fanctl
+version               = 1.0.0
+display_name          = U-Fanctl
+desc                  = 一款为万由HS-201P开发的风扇控制软件，用以控制HS-201P自带的风扇。
+arch                  = x86_64
+source                = thirdparty
+maintainer            = Mrkinte
+maintainer_url        = https://www.marjin.workers.dev
+distributor           = Mrkinte
+distributor_url       = https://github.com/Mrkinte
+desktop_uidir         = ui
+desktop_applaunchname = u-fanctl.Application

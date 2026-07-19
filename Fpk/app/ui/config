@@ -1,0 +1,13 @@
+{
+    ".url": {
+        "u-fanctl.Application": {
+            "title": "u-fanctl",
+            "icon": "images/icon_{0}.png",
+            "type": "url",
+            "protocol": "http",
+            "port": "3233",
+            "url": "/",
+            "allUsers": false
+        }
+    }
+}

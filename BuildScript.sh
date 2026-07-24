@@ -26,5 +26,7 @@ cd ..
 rm -rf Fpk/app/server/
 cp -r U-Fanctl/dist/u-fanctl/ Fpk/app/server/
 cd Fpk/
+rm -rf *.fpk
 fnpack build
+mv u-fanctl.fpk u-fanctl_$VERSION.fpk
 echo "🎉Build complete🎉"

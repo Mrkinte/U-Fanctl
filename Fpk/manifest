@@ -1,5 +1,5 @@
 appname               = u-fanctl
-version               = 1.1.0
+version               = 1.1.1
 display_name          = U-Fanctl
 desc                  = 一款为万由HS-201P开发的风扇控制软件，用以控制HS-201P自带的风扇。默认密码：admin
 arch                  = x86_64

@@ -127,4 +127,6 @@ async def reset_password(conf: _PasswordConfig):
         return CustomResponse(result=Result.FAILURE, detail="密码错误")
 
     config.set("auth.password", conf.new_password)
+    config.save()
+    logger.info("Password reset successfully")
     return CustomResponse()

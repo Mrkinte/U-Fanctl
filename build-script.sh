@@ -19,6 +19,15 @@ else
     echo "Warning: manifest file not found ($MANIFEST)"
 fi
 
+# 构建前端代码
+read -r -p "是否构建前端代码? [Y/n] " BUILD_WEBUI
+if [ -z "$BUILD_WEBUI" ] || [[ "$BUILD_WEBUI" =~ ^[Yy]$ ]]; then
+    echo "Building webui..."
+    (cd ../webui && npm run build) || exit 1
+else
+    echo "Skipped webui build"
+fi
+
 rm -rf dist/
 uv run pyinstaller --add-data "./pyproject.toml:." -n "u-fanctl" main.py
 cp -r wwwroot/ dist/u-fanctl/

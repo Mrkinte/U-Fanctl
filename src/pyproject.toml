@@ -1,0 +1,18 @@
+[project]
+name = "u-fanctl"
+version = "1.1.1"
+requires-python = ">=3.12"
+dependencies = [
+    "apscheduler>=3.11.2",
+    "black>=26.5.1",
+    "fastapi>=0.136.1",
+    "loguru>=0.7.3",
+    "path>=17.1.1",
+    "psutil>=7.2.2",
+    "pyinstaller>=6.21.0",
+    "smbus2>=0.6.1",
+    "tomli-w>=1.2.0",
+    "uvicorn>=0.47.0",
+    "websockets>=16.0",
+    "winfcntl>=1.1.9",
+]

@@ -1,5 +1,19 @@
+# Python
+src/*.pyc
+src/log.txt
+src/config.toml
+src/.venv
+src/build
+src/dist
+src/__pycache__
+src/wwwroot
+
+# WebUI
+/webui/node_modules
+/webui/dist
+
 # Build
-/Fpk/app/server
+/fnos-package/app/server
 *.fpk
 
 # Database

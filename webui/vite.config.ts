@@ -20,6 +20,7 @@ export default defineConfig({
               target: "http://127.0.0.1:3233",
               changeOrigin: true,
               secure: false, // 禁用 SSL验证（测试环境使用）
+              ws: true,
             },
           },
         }

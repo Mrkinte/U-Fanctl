@@ -1,73 +1,55 @@
 <script setup lang="ts">
-import ControlMode from "../components/ControlMode.vue";
-import ControlCurve from "../components/ControlCurve.vue";
-import SettingsCard from "../components/SettingsCard.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import { deviceStatus, ws } from "../models/global.ts";
-import { getWebSocketBaseUrl } from "../utils/custom.ts";
-import type { DeviceStatus } from "../models/config-model.ts";
-import type TemperatureChart from "../components/TemperatureChart.vue";
-import { LoginDetection, logout } from "../apis/auth.ts";
 import { useDialog } from "naive-ui";
+import { useRouter } from "vue-router";
+import { getTemperatureApiV1TemperatureGet } from "../api/generated";
+import ControlModeCard from "../components/control/ControlModeCard.vue";
+import CurveEditorCard from "../components/control/CurveEditorCard.vue";
+import TemperatureChartCard from "../components/dashboard/TemperatureChartCard.vue";
+import { temperatureSettings } from "../composables/useAppState";
+import { useDeviceStatus } from "../composables/useDeviceStatus";
 
+const router = useRouter();
 const dialog = useDialog();
-const isLoggedIn = ref(false);
 
-const heartbeatTimer = ref(0);
-const chartRef = ref<InstanceType<typeof TemperatureChart> | null>(null);
+const chartRef = ref<InstanceType<typeof TemperatureChartCard> | null>(null);
 
-const handlePushTemperature = (temp: number) => {
-  chartRef.value?.pushTemperature(temp);
+const { connect, disconnect } = useDeviceStatus({
+  onTemperature: (temperature) => chartRef.value?.pushTemperature(temperature),
+});
+
+const loadTemperatureSettings = async () => {
+  const { data } = await getTemperatureApiV1TemperatureGet();
+  if (data) {
+    temperatureSettings.value = data;
+  }
 };
 
 onMounted(async () => {
-  if (ws.value !== undefined) return;
-
-  try {
-    await LoginDetection();
-  } catch {
+  const temperatureRequest = loadTemperatureSettings();
+  const connected = await connect();
+  if (!connected) {
     dialog.warning({
       title: "登录超时",
       content: "当前会话已失效，请重新登录。",
       positiveText: "确定",
     });
+    router.push("/");
     return;
   }
-  isLoggedIn.value = true;
-
-  ws.value = new WebSocket(`${getWebSocketBaseUrl()}/api/v1/ws/info`);
-
-  ws.value.onclose = () => {
-    clearInterval(heartbeatTimer.value);
-    ws.value = undefined;
-  };
-
-  ws.value.onmessage = (event: MessageEvent) => {
-    const rawData: string = event.data;
-    const parsedData = JSON.parse(rawData);
-    deviceStatus.value = parsedData as DeviceStatus;
-    handlePushTemperature(deviceStatus.value.temperature);
-  };
-
-  heartbeatTimer.value = setInterval(() => {
-    if (ws.value === undefined) return;
-    ws.value.send("heartbeat");
-  }, 5000);
+  await temperatureRequest;
 });
 
 onBeforeUnmount(() => {
-  if (isLoggedIn.value) {
-    logout();
-  }
+  disconnect();
 });
 </script>
 
 <template>
   <div id="control-view">
-    <ControlMode />
-    <ControlCurve />
-    <TemperatureChart ref="chartRef" />
-    <SettingsCard />
+    <ControlModeCard />
+    <CurveEditorCard />
+    <TemperatureChartCard ref="chartRef" :source="temperatureSettings.source" />
   </div>
 </template>
 

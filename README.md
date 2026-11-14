@@ -27,10 +27,39 @@
 
 ## 项目结构
 
-- ```Fpk/``` .fpk打包相关文件，详情请查阅 [飞牛官方文档](https://developer.fnnas.com/docs/guide)。
+- ```src/```：后端 Python/FastAPI 服务，核心包为 `src/fanctl/`（`api`、`core`、`schemas`、`services`），入口为 `src/main.py`。
 
-- ```U-Fanctl/``` 后端代码，用于风扇控制、提供网页服务。
+- ```webui/```：Vue3 + Vite + TypeScript 前端，构建输出到 `src/wwwroot`。
 
-- ```WebUI/``` 前端代码，编译后的文件保存在U-Fanctl/wwwroot目录下。
+- ```fnos-package/```：飞牛 fpk 打包文件，详情请查阅 [飞牛官方文档](https://developer.fnnas.com/docs/guide)。
 
-- ```BuildScript.sh``` 自动化构建脚本，一键编译.fpk安装包（前提是环境正确搭建）。
+- ```build-script.sh```：自动化构建脚本，一键编译 fpk 安装包（前提是环境正确搭建）。
+
+## 接口文档
+
+- 运行服务后，可在 `/api/docs` 查看交互式接口文档。
+
+- OpenAPI JSON 位于 `/api/openapi.json`。
+
+- WebSocket 状态推送地址为 `/api/v1/ws/status`，OpenAPI 不覆盖该接口；消息包含 `temperature`（温度）、`fan_speed`（转速）与 `source`（温度源：`cpu` 或 `hdd`）字段。
+
+## 前端接口代码生成
+
+后端接口变更后，按顺序执行以下命令更新前端客户端：
+
+```bash
+uv run --directory src python scripts/export_openapi.py
+cd webui && npm run api:generate
+```
+
+生成的 `webui/openapi.json` 与 `webui/src/api/generated` 需随接口变更一起提交更新。
+
+## 温度设置
+
+配置文件 `[temperature]` 段用于控制温度采集：
+
+- ```source = "cpu" | "hdd"```：温度源，默认 `cpu`。
+
+- ```interval```：采集周期（秒），取值范围 1–60，默认 `1`。
+
+硬盘温度优先通过 `smartctl` 读取，失败时回退到 sysfs 的 `drivetemp` 传感器。
